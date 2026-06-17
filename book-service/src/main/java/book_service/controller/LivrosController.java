@@ -11,7 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vendas_service.dto.AtualizarEstoqueRequest;
+import book_service.dto.AtualizarEstoqueRequest;
 
 import java.util.List;
 

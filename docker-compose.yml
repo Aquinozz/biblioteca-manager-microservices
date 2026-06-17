@@ -1,0 +1,40 @@
+services:
+
+  discovery-server:
+    build: ./discovery-server
+    ports:
+      - "8761:8761"
+    container_name: discovery-server
+
+  gateway-service:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-server
+    container_name: gateway-service
+
+  book-service:
+    build: ./book-service
+    ports:
+      - "8081:8082"
+    depends_on:
+      - discovery-server
+    container_name: book-service
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8082:8081"
+    depends_on:
+      - discovery-server
+    container_name: auth-service
+
+  vendas-service:
+    build: ./vendas-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - discovery-server
+      - book-service
+    container_name: vendas-service
