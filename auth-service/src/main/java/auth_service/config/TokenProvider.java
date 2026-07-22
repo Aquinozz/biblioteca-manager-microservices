@@ -6,10 +6,12 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Collection;
 import java.util.Date;
 
 @Slf4j
@@ -28,15 +30,18 @@ public class TokenProvider {
 
         log.info("Gerando token para usuário: {}", user.getUsername());
 
-        return buildToken(user.getUsername());
+        return buildToken(user.getUsername(), user.getAuthorities());
     }
 
-    private String buildToken(String username){
+    private String buildToken(String username, Collection<? extends GrantedAuthority>authorities){
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationTime);
 
         String token = Jwts.builder()
                 .subject(username)
+                .claim("roles", authorities.stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList())
                 .issuedAt(now)
                 .expiration(expiration)
                 .signWith(getSigningKey())

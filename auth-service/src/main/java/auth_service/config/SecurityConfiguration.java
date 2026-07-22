@@ -50,19 +50,8 @@ public class SecurityConfiguration {
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
 
-                                .requestMatchers("/auth/logout").authenticated()
+                                 .requestMatchers("/auth/logout").authenticated()
 
-                                .requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN")
-
-                                //Libero acesso do get nos livros tanto para leitor tanto para admin
-                                .requestMatchers(HttpMethod.GET, "/livros/**")
-                                .hasAnyRole("ADMIN", "LEITOR")
-
-
-                                .requestMatchers( "/vendas/**").hasRole("ADMIN")
-                                .requestMatchers( "/dados/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
 
