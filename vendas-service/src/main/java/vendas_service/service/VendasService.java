@@ -1,10 +1,7 @@
 package vendas_service.service;
 
 import vendas_service.client.LivroClient;
-import vendas_service.dto.AtualizarEstoqueRequest;
-import vendas_service.dto.ItemRequest;
-import vendas_service.dto.LivroDTO;
-import vendas_service.dto.VendaRequest;
+import vendas_service.dto.*;
 import vendas_service.enums.EnumPagamentoVenda;
 import vendas_service.enums.EnumStatusVenda;
 import vendas_service.model.ItemVenda;
@@ -27,12 +24,15 @@ public class VendasService {
 
     private final VendasRepository vendasRepository;
     private final LivroClient livroClient;
+    private final VendaEventPublisher vendaEventPublisher;
 
     public VendasService(
                          VendasRepository vendasRepository,
-                         LivroClient livroClient) {
+                         LivroClient livroClient,
+                         VendaEventPublisher vendaEventPublisher) {
         this.vendasRepository = vendasRepository;
         this.livroClient = livroClient;
+        this.vendaEventPublisher = vendaEventPublisher;
     }
 
 
@@ -64,15 +64,8 @@ public class VendasService {
         }
 
         for (ItemVenda item : venda.getItens()) {
-
-            LivroDTO livro = livroClient.buscarPorId(item.getLivroId());
-
-            livroClient.atualizarEstoque(
-                    livro.getId(),
-                    new AtualizarEstoqueRequest(
-                            livro.getQuantidade() + item.getQuantidade()
-                    )
-            );
+            vendaEventPublisher.publicarVendaCancelada(
+                    venda.getId(), item.getLivroId(), item.getQuantidade());
         }
 
         log.info("Venda " + id + " cancelada com sucesso");
@@ -122,10 +115,8 @@ public class VendasService {
             Integer novaQuantidade =
                     livro.getQuantidade() - itemReq.getQuantidade();
 
-            livroClient.atualizarEstoque(
-                    livro.getId(),
-                    new AtualizarEstoqueRequest(novaQuantidade)
-            );
+            vendaEventPublisher.publicarVendaRealizada(
+                    venda.getId(), livro.getId(), itemReq.getQuantidade());
 
             //Criar item de venda
             ItemVenda item = new ItemVenda();
