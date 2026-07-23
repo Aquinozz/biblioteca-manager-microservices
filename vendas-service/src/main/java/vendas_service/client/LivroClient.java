@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import vendas_service.dto.AtualizarEstoqueRequest;
 import vendas_service.dto.LivroDTO;
 
-@FeignClient(name = "book-service")
+@FeignClient(name = "book-service", fallback = LivroClientFallback.class)
 public interface LivroClient {
 
     @GetMapping("/livros/{id}")
