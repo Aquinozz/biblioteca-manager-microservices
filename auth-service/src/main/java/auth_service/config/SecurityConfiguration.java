@@ -48,6 +48,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/auth-api-docs").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
 
                                  .requestMatchers("/auth/logout").authenticated()

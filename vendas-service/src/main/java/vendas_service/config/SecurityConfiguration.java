@@ -31,6 +31,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/vendas-api-docs").permitAll()
 
                                 .requestMatchers("/vendas/**").hasRole("ADMIN")
 

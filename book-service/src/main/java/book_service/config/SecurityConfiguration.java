@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/livros-api-docs").permitAll()
 
                                 .requestMatchers(HttpMethod.GET, "/livros/**")
                                 .hasAnyRole("ADMIN", "LEITOR")
