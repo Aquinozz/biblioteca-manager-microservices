@@ -215,7 +215,6 @@ biblioteca-manager-microservices/
 
 - [ ] Observabilidade (Prometheus + Grafana)
 - [ ] Migrar H2 para PostgreSQL
-- [ ] CI/CD com GitHub Actions
 - [ ] Config Server (Spring Cloud Config)
 - [ ] Kubernetes (minikube)
 
