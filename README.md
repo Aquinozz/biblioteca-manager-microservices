@@ -214,7 +214,7 @@ biblioteca-manager-microservices/
 ## Proximos passos (estudo)
 
 - [ ] Observabilidade (Prometheus + Grafana)
-- [ ] Migrar H2 para PostgreSQL
+- [ ] Migrar H2 para MySQL
 - [ ] Config Server (Spring Cloud Config)
 - [ ] Kubernetes (minikube)
 
