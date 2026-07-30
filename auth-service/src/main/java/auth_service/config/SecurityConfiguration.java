@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/auth-api-docs").permitAll()
+                                .requestMatchers("/actuator/prometheus").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
 
                                  .requestMatchers("/auth/logout").authenticated()
