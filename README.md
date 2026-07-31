@@ -10,14 +10,14 @@ Evolucao de uma API monolitica de gerenciamento de biblioteca para arquitetura d
 
 ```
 ┌──────────┐     ┌──────────────┐
-│  Cliente  │────▶│ API Gateway  │
+│  Cliente  │──▶│ API Gateway  │
 └──────────┘     │   (8080)     │
                  └──────┬───────┘
           ┌─────────────┼──────────────┐
           ▼             ▼              ▼
   ┌────────────┐ ┌───────────┐ ┌──────────────┐
-  │Auth Service│ │Book Service│ │Vendas Service│
-  │  (8081)   │ │  (8082)   │ │   (8083)    │
+  │Auth Service│ │Book Service││Vendas Service│
+  │  (8081)   │  │  (8082)    ││   (8083)     │
   └────────────┘ └───────────┘ └──────┬───────┘
                                       │ Kafka
                                       ▼
@@ -213,7 +213,6 @@ biblioteca-manager-microservices/
 
 ## Proximos passos (estudo)
 
-- [ ] Observabilidade (Prometheus + Grafana)
 - [ ] Migrar H2 para MySQL
 - [ ] Config Server (Spring Cloud Config)
 - [ ] Kubernetes (minikube)
