@@ -39,6 +39,7 @@ Evolucao de uma API monolitica de gerenciamento de biblioteca para arquitetura d
 
 | Servico | Porta | Funcao | Tecnologias |
 |---------|-------|--------|-------------|
+| **config-server** | 8888 | Centralizacao de configuracoes | Spring Cloud Config |
 | **discovery-server** | 8761 | Service Registry | Eureka |
 | **api-gateway** | 8080 | API Gateway | Spring Cloud Gateway |
 | **auth-service** | 8081 | Autenticacao e autorizacao | JWT, Spring Security |
@@ -152,6 +153,7 @@ curl http://localhost:8081/livros/1 -H "Authorization: Bearer $TOKEN"
 |--------|---------------|
 | **API Gateway** | Spring Cloud Gateway como entry point unico |
 | **Service Discovery** | Netflix Eureka para registro e descoberta |
+| **Config Centralizada** | Spring Cloud Config Server com config-repo versionado |
 | **Seguranca Distribuida** | JWT com validacao local em cada servico |
 | **Comunicacao Sincrona** | OpenFeign entre vendas-service e book-service |
 | **Comunicacao Assincrona** | Kafka para eventos de venda e cancelamento |
@@ -200,6 +202,8 @@ cd book-service && ./mvnw test
 
 ```
 biblioteca-manager-microservices/
+├── config-server/        # Config Server (Spring Cloud Config)
+├── config-repo/          # Configuracoes centralizadas (YAML por servico)
 ├── api-gateway/          # Spring Cloud Gateway
 ├── auth-service/         # Autenticacao JWT
 ├── book-service/         # CRUD de livros
@@ -213,8 +217,9 @@ biblioteca-manager-microservices/
 
 ## Proximos passos (estudo)
 
+- [x] Observabilidade (Prometheus + Grafana)
+- [x] Config Server (Spring Cloud Config)
 - [ ] Migrar H2 para MySQL
-- [ ] Config Server (Spring Cloud Config)
 - [ ] Kubernetes (minikube)
 
 ---

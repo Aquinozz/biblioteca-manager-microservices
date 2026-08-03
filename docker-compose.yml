@@ -1,9 +1,25 @@
 services:
 
+  config-server:
+    build: ./config-server
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./config-repo:/config-repo:ro
+    container_name: config-server
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8888"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   discovery-server:
     build: ./discovery-server
     ports:
       - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_healthy
     container_name: discovery-server
 
   gateway-service:
@@ -11,7 +27,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - discovery-server
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
     container_name: gateway-service
 
   book-service:
@@ -19,8 +38,12 @@ services:
     ports:
       - "8081:8082"
     depends_on:
-      - discovery-server
-      - kafka
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+      kafka:
+        condition: service_started
     container_name: book-service
 
   auth-service:
@@ -28,7 +51,10 @@ services:
     ports:
       - "8082:8081"
     depends_on:
-      - discovery-server
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
     container_name: auth-service
 
   zookeeper:
@@ -71,7 +97,12 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - discovery-server
-      - book-service
-      - kafka
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+      book-service:
+        condition: service_started
+      kafka:
+        condition: service_started
     container_name: vendas-service

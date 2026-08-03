@@ -1,0 +1,5 @@
+# Java / Maven
+target/
+
+# Bancos H2
+data/

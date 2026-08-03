@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: api-docs-auth
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth-api-docs
+        - id: api-docs-book
+          uri: lb://BOOK-SERVICE
+          predicates:
+            - Path=/livros-api-docs
+        - id: api-docs-vendas
+          uri: lb://VENDAS-SERVICE
+          predicates:
+            - Path=/vendas-api-docs
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+        - id: book-service
+          uri: lb://BOOK-SERVICE
+          predicates:
+            - Path=/livros/**
+        - id: vendas-service
+          uri: lb://VENDAS-SERVICE
+          predicates:
+            - Path=/vendas/**
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: auth
+        url: /auth-api-docs
+      - name: books
+        url: /livros-api-docs
+      - name: vendas
+        url: /vendas-api-docs
