@@ -1,5 +1,8 @@
 # Java / Maven
 target/
 
+# IDE
+.idea/
+
 # Bancos H2
 data/
