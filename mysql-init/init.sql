@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS authdb;
+CREATE DATABASE IF NOT EXISTS bookdb;
+CREATE DATABASE IF NOT EXISTS vendasdb;
+
+CREATE USER IF NOT EXISTS 'biblioteca'@'%' IDENTIFIED BY 'biblioteca123';
+GRANT ALL PRIVILEGES ON authdb.* TO 'biblioteca'@'%';
+GRANT ALL PRIVILEGES ON bookdb.* TO 'biblioteca'@'%';
+GRANT ALL PRIVILEGES ON vendasdb.* TO 'biblioteca'@'%';
+FLUSH PRIVILEGES;
