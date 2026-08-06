@@ -44,6 +44,8 @@ services:
         condition: service_started
       kafka:
         condition: service_started
+      mysql:
+        condition: service_healthy
     container_name: book-service
 
   auth-service:
@@ -55,7 +57,25 @@ services:
         condition: service_healthy
       discovery-server:
         condition: service_started
+      mysql:
+        condition: service_healthy
     container_name: auth-service
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
@@ -105,4 +125,9 @@ services:
         condition: service_started
       kafka:
         condition: service_started
+      mysql:
+        condition: service_healthy
     container_name: vendas-service
+
+volumes:
+  mysql_data:

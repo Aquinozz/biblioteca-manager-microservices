@@ -43,8 +43,9 @@ Evolucao de uma API monolitica de gerenciamento de biblioteca para arquitetura d
 | **discovery-server** | 8761 | Service Registry | Eureka |
 | **api-gateway** | 8080 | API Gateway | Spring Cloud Gateway |
 | **auth-service** | 8081 | Autenticacao e autorizacao | JWT, Spring Security |
-| **book-service** | 8082 | CRUD de livros e estoque | JPA, H2 |
+| **book-service** | 8082 | CRUD de livros e estoque | JPA, MySQL |
 | **vendas-service** | 8083 | Processamento de vendas | Feign, Kafka |
+| **mysql** | 3307 | Banco de dados (authdb, bookdb, vendasdb) | MySQL 8 |
 | **kafka** | 9092 | Mensageria assincrona | Kafka + Zookeeper |
 
 ---
@@ -158,7 +159,7 @@ curl http://localhost:8081/livros/1 -H "Authorization: Bearer $TOKEN"
 | **Comunicacao Sincrona** | OpenFeign entre vendas-service e book-service |
 | **Comunicacao Assincrona** | Kafka para eventos de venda e cancelamento |
 | **Circuit Breaker** | Resilience4j com fallback para degradacao graciosa |
-| **Database per Service** | Cada servico com seu proprio banco H2 |
+| **Database per Service** | Um MySQL com bancos separados (authdb, bookdb, vendasdb) |
 
 ---
 
@@ -189,7 +190,8 @@ cd book-service && ./mvnw test
 - **Spring Security** + **JWT** (jjwt 0.12.7)
 - **Apache Kafka** + **Zookeeper**
 - **Resilience4j** (Circuit Breaker)
-- **H2 Database**
+- **MySQL 8** (um servidor, bancos separados por servico)
+- **H2** (apenas nos testes, em memoria)
 - **Docker** + **Docker Compose**
 - **Maven**
 - **JUnit 5** + **Mockito**
@@ -209,9 +211,18 @@ biblioteca-manager-microservices/
 ├── book-service/         # CRUD de livros
 ├── discovery-server/     # Eureka Service Registry
 ├── vendas-service/       # Processamento de vendas
-├── data/                 # Bancos H2 (dev)
+├── mysql-init/           # Script de criacao dos bancos (authdb, bookdb, vendasdb)
 └── docker-compose.yml    # Orquestracao
 ```
+
+---
+
+## Proximos passos (estudo)
+
+- [x] Observabilidade (Prometheus + Grafana)
+- [x] Config Server (Spring Cloud Config)
+- [x] Migrar H2 para MySQL
+- [ ] Kubernetes (minikube)
 
 ---
 
