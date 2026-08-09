@@ -1,12 +1,12 @@
 # Biblioteca Manager Microservices
 
-Evolucao de uma API monolitica de gerenciamento de biblioteca para arquitetura de microservicos.
+Evolution of a monolithic library management API to a microservices architecture.
 
-**Repositorio original:** [github.com/Aquinozz/biblioteca-manager-api](https://github.com/Aquinozz/biblioteca-manager-api)
+**Original repository:** [github.com/Aquinozz/biblioteca-manager-api](https://github.com/Aquinozz/biblioteca-manager-api)
 
 ---
 
-## Arquitetura
+## Architecture
 
 ```
 ┌──────────┐     ┌──────────────┐
@@ -35,54 +35,54 @@ Evolucao de uma API monolitica de gerenciamento de biblioteca para arquitetura d
 
 ---
 
-## Servicos
+## Services
 
-| Servico | Porta | Funcao | Tecnologias |
+| Service | Port | Role | Technologies |
 |---------|-------|--------|-------------|
-| **config-server** | 8888 | Centralizacao de configuracoes | Spring Cloud Config |
-| **discovery-server** | 8761 | Service Registry | Eureka |
+| **config-server** | 8888 | Centralized configuration | Spring Cloud Config |
+| **discovery-server** | 8761 | Service registry | Eureka |
 | **api-gateway** | 8080 | API Gateway | Spring Cloud Gateway |
-| **auth-service** | 8081 | Autenticacao e autorizacao | JWT, Spring Security |
-| **book-service** | 8082 | CRUD de livros e estoque | JPA, MySQL |
-| **vendas-service** | 8083 | Processamento de vendas | Feign, Kafka |
-| **mysql** | 3307 | Banco de dados (authdb, bookdb, vendasdb) | MySQL 8 |
-| **kafka** | 9092 | Mensageria assincrona | Kafka + Zookeeper |
+| **auth-service** | 8081 | Authentication and authorization | JWT, Spring Security |
+| **book-service** | 8082 | Book and stock CRUD | JPA, MySQL |
+| **vendas-service** | 8083 | Sales processing | Feign, Kafka |
+| **mysql** | 3307 | Database (authdb, bookdb, vendasdb) | MySQL 8 |
+| **kafka** | 9092 | Async messaging | Kafka + Zookeeper |
 
 ---
 
-## Como rodar
+## How to run
 
-### Pre-requisitos
+### Prerequisites
 
-- Docker e Docker Compose
-- Java 21 (para desenvolvimento)
+- Docker and Docker Compose
+- Java 21 (for development)
 
-### Build e execucao
+### Build and run
 
 ```bash
-# Buildar todos os servicos
+# Build all services
 docker compose build
 
-# Subir todos os servicos
+# Start all services
 docker compose up -d
 
-# Acompanhar logs
+# Follow logs
 docker compose logs -f
 ```
 
-### Verificar se tudo subiu
+### Verify everything is up
 
 ```bash
 curl http://localhost:8761/eureka/apps
 ```
 
-Todos os servicos devem aparecer com status `UP`.
+All services should appear with status `UP`.
 
 ---
 
-## Fluxo de uso
+## Usage flow
 
-### 1. Login como admin
+### 1. Login as admin
 
 ```bash
 curl -X POST http://localhost:8080/auth/login \
@@ -90,13 +90,13 @@ curl -X POST http://localhost:8080/auth/login \
   -d '{"email":"admin@email.com","senha":"123456"}'
 ```
 
-Salve o token retornado:
+Save the returned token:
 
 ```bash
 TOKEN="eyJhbGciOiJIUzI1NiJ9..."
 ```
 
-### 2. Criar um livro
+### 2. Create a book
 
 ```bash
 curl -X POST http://localhost:8080/livros \
@@ -113,13 +113,13 @@ curl -X POST http://localhost:8080/livros \
   }'
 ```
 
-### 3. Listar livros
+### 3. List books
 
 ```bash
 curl http://localhost:8080/livros -H "Authorization: Bearer $TOKEN"
 ```
 
-### 4. Realizar uma venda
+### 4. Make a sale
 
 ```bash
 curl -X POST http://localhost:8080/vendas \
@@ -131,16 +131,16 @@ curl -X POST http://localhost:8080/vendas \
   }'
 ```
 
-A venda publica um evento no Kafka. O book-service consome o evento e atualiza o estoque assincronamente.
+The sale publishes an event to Kafka. The book-service consumes the event and updates stock asynchronously.
 
-### 5. Cancelar uma venda
+### 5. Cancel a sale
 
 ```bash
 curl -X DELETE http://localhost:8080/vendas/1 \
   -H "Authorization: Bearer $TOKEN"
 ```
 
-### 6. Verificar estoque apos venda/cancelamento
+### 6. Check stock after sale/cancellation
 
 ```bash
 curl http://localhost:8081/livros/1 -H "Authorization: Bearer $TOKEN"
@@ -148,41 +148,41 @@ curl http://localhost:8081/livros/1 -H "Authorization: Bearer $TOKEN"
 
 ---
 
-## Padroes de microservicos implementados
+## Implemented microservices patterns
 
-| Padrao | Implementacao |
+| Pattern | Implementation |
 |--------|---------------|
-| **API Gateway** | Spring Cloud Gateway como entry point unico |
-| **Service Discovery** | Netflix Eureka para registro e descoberta |
-| **Config Centralizada** | Spring Cloud Config Server com config-repo versionado |
-| **Seguranca Distribuida** | JWT com validacao local em cada servico |
-| **Comunicacao Sincrona** | OpenFeign entre vendas-service e book-service |
-| **Comunicacao Assincrona** | Kafka para eventos de venda e cancelamento |
-| **Circuit Breaker** | Resilience4j com fallback para degradacao graciosa |
-| **Database per Service** | Um MySQL com bancos separados (authdb, bookdb, vendasdb) |
+| **API Gateway** | Spring Cloud Gateway as the single entry point |
+| **Service Discovery** | Netflix Eureka for registration and discovery |
+| **Centralized Config** | Spring Cloud Config Server with a versioned config-repo |
+| **Distributed Security** | JWT validated locally in each service |
+| **Synchronous Communication** | OpenFeign between vendas-service and book-service |
+| **Asynchronous Communication** | Kafka for sale and cancellation events |
+| **Circuit Breaker** | Resilience4j with fallback for graceful degradation |
+| **Database per Service** | A single MySQL instance with separate databases (authdb, bookdb, vendasdb) |
 
 ---
 
-## Testes
+## Tests
 
 ```bash
-# Vendas service (17 testes)
+# Vendas service (17 tests)
 cd vendas-service && ./mvnw test
 
-# Book service (15 testes)
+# Book service (15 tests)
 cd book-service && ./mvnw test
 ```
 
-**32 testes unitarios** com JUnit 5 e Mockito cobrindo:
+**32 unit tests** with JUnit 5 and Mockito covering:
 
-- Regras de negocio de vendas (vender, cancelar, validacoes)
-- CRUD de livros e filtros
-- Validacao de tokens JWT
-- Publicacao de eventos Kafka
+- Sales business rules (sell, cancel, validations)
+- Book CRUD and filters
+- JWT token validation
+- Kafka event publishing
 
 ---
 
-## Tecnologias
+## Technologies
 
 - **Java 21**
 - **Spring Boot 3.5.14**
@@ -190,8 +190,8 @@ cd book-service && ./mvnw test
 - **Spring Security** + **JWT** (jjwt 0.12.7)
 - **Apache Kafka** + **Zookeeper**
 - **Resilience4j** (Circuit Breaker)
-- **MySQL 8** (um servidor, bancos separados por servico)
-- **H2** (apenas nos testes, em memoria)
+- **MySQL 8** (single server, separate databases per service)
+- **H2** (only in tests, in-memory)
 - **Docker** + **Docker Compose**
 - **Maven**
 - **JUnit 5** + **Mockito**
@@ -200,30 +200,30 @@ cd book-service && ./mvnw test
 
 ---
 
-## Estrutura do projeto
+## Project structure
 
 ```
 biblioteca-manager-microservices/
 ├── config-server/        # Config Server (Spring Cloud Config)
-├── config-repo/          # Configuracoes centralizadas (YAML por servico)
+├── config-repo/          # Centralized configuration (YAML per service)
 ├── api-gateway/          # Spring Cloud Gateway
-├── auth-service/         # Autenticacao JWT
-├── book-service/         # CRUD de livros
+├── auth-service/         # JWT authentication
+├── book-service/         # Book CRUD
 ├── discovery-server/     # Eureka Service Registry
-├── vendas-service/       # Processamento de vendas
-├── mysql-init/           # Script de criacao dos bancos (authdb, bookdb, vendasdb)
-└── docker-compose.yml    # Orquestracao
+├── vendas-service/       # Sales processing
+├── mysql-init/           # Database creation scripts (authdb, bookdb, vendasdb)
+└── docker-compose.yml    # Orchestration
 ```
 
 ---
 
-## Proximos passos (estudo)
+## Next steps (study)
 
-- [x] Observabilidade (Prometheus + Grafana)
+- [x] Observability (Prometheus + Grafana)
 - [x] Config Server (Spring Cloud Config)
-- [x] Migrar H2 para MySQL
+- [x] Migrate H2 to MySQL
 - [ ] Kubernetes (minikube)
 
 ---
 
-Projeto de estudo desenvolvido por [Aquinozz](https://github.com/Aquinozz)
+Study project developed by [Aquinozz](https://github.com/Aquinozz)
