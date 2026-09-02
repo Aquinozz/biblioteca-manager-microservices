@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -90,5 +91,10 @@ public class TokenProvider {
         log.debug("Username extraído do token: {}", username);
 
         return username;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getRoles(String token){
+        return getClaims(token).get("roles", List.class);
     }
 }
