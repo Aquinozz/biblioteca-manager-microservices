@@ -2,6 +2,8 @@ package vendas_service.controller;
 
 
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import vendas_service.dto.VendaRequest;
 import vendas_service.enums.EnumPagamentoVenda;
 import vendas_service.enums.EnumStatusVenda;
@@ -26,12 +28,11 @@ import java.util.List;
 @Tag(name = "Vendas", description = "Operações relacionadas às vendas de livros")
 @RestController
 @RequestMapping("/vendas")
+@AllArgsConstructor
 public class VendasController {
 
 
-    @Autowired
     private VendasRepository vendasRepository;
-
     private final VendasService vendasService;
 
     public VendasController(VendasService vendasService) {
