@@ -5,8 +5,8 @@ import book_service.dto.LivroResponseDTO;
 import book_service.enums.EnumLivro;
 import book_service.model.LivrosModel;
 import book_service.repository.LivrosRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +14,10 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class LivrosService {
 
-    // Realiza uma conexão "Automatica" com o DB
-    @Autowired
+
     private LivrosRepository livrosRepository;
 
     public LivrosModel buscarPorId(Long id) {

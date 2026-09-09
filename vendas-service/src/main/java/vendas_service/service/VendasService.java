@@ -1,5 +1,7 @@
 package vendas_service.service;
 
+
+import lombok.RequiredArgsConstructor;
 import vendas_service.client.LivroClient;
 import vendas_service.dto.*;
 import vendas_service.enums.EnumPagamentoVenda;
@@ -14,11 +16,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class VendasService {
 
 
@@ -26,14 +28,6 @@ public class VendasService {
     private final LivroClient livroClient;
     private final VendaEventPublisher vendaEventPublisher;
 
-    public VendasService(
-                         VendasRepository vendasRepository,
-                         LivroClient livroClient,
-                         VendaEventPublisher vendaEventPublisher) {
-        this.vendasRepository = vendasRepository;
-        this.livroClient = livroClient;
-        this.vendaEventPublisher = vendaEventPublisher;
-    }
 
 
 
