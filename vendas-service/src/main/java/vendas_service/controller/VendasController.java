@@ -35,10 +35,6 @@ public class VendasController {
     private VendasRepository vendasRepository;
     private final VendasService vendasService;
 
-    public VendasController(VendasService vendasService) {
-        this.vendasService = vendasService;
-    }
-
     @Operation(summary = "Lista todas as vendas realizadas")
     @GetMapping
     public ResponseEntity <?>  listarVendas(
