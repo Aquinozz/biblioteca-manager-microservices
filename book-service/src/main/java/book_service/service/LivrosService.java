@@ -18,7 +18,7 @@ import java.util.List;
 public class LivrosService {
 
 
-    private LivrosRepository livrosRepository;
+    private final LivrosRepository livrosRepository;
 
     public LivrosModel buscarPorId(Long id) {
         log.info("Buscando livro por ID: {}", id);

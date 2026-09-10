@@ -32,7 +32,7 @@ import java.util.List;
 public class VendasController {
 
 
-    private VendasRepository vendasRepository;
+    private final VendasRepository vendasRepository;
     private final VendasService vendasService;
 
     @Operation(summary = "Lista todas as vendas realizadas")
